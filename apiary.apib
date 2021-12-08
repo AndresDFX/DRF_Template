@@ -1,80 +1,56 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://locahost/
 
-# tools
+# TOOLS
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Tools API integration services definition
 
-## Questions Collection [/questions]
+| Version     | Change description    | Date |
+| ----------- | --------------------- |----------|
+| 1.0.0 | First approach to business needs | 2021-12-08 |
 
-### List All Questions [GET]
+# Group Authentication
+
+In this section are all the services related to authentication 
+
+### Constraints
+
+- VPN Required: NO
+- Private Service: YES
+
+## Get Token [/auth/login/]
+
+### Get token [GET]
+
+##### form-data
+| Key    | Value                     | Type   | Length | Mandatory |
+|--------------|---------------------------------|--------|--------|-----------|
+| username | email registered on the platform | Text |        | Y         |
+| password    | password registered on the platform | Text |        | Y         |
+
+##### Response 200
+| Attribute   | Description          | Type      | Length  | Mandatory   |
+| ----------- | -------------------- | --------- | ------- | ----------- |
+| access       | access token to the other services | String    |         | Y           |
+| refresh       | refresh token | String    |         | Y           |
+
+##### Response 401
+| Attribute   | Error message |
+| ----------- | ------------------------------------------------------- |
+| detail | No active account found with the given credentials|
+
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+        {
+            "access": "eyJ1c2VyX2lkIjoxfQ.X40jZg.fyFu4D-icSRcepC4TwQc-WfYdZg",
+            "refresh": "eyJ1c2VyX2lkIjoxfQ.YXg1bQ.H6LM3aWEbpo99J5O3UVvI6-pib8"
+        }
+        
 
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
++ Response 401 (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "detail": "No active account found with the given credentials"
         }
 
-+ Response 201 (application/json)
-
-    + Headers
-
-            Location: /questions/2
-
-    + Body
-
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
